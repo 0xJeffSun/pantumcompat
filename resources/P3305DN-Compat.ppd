@@ -1,20 +1,20 @@
 *PPD-Adobe: "4.3"
 *FormatVersion: "4.3"
-*FileVersion: "0.2.1"
+*FileVersion: "0.2.2"
 *LanguageVersion: English
 *LanguageEncoding: ISOLatin1
 *PCFileName: "PT3305C.PPD"
 *Manufacturer: "Pantum Compatible"
 *Product: "(P3305DN)"
-*ModelName: "P3305DN Local Compatible"
-*ShortNickName: "P3305DN Compatible"
-*NickName: "P3305DN Local Compatible PCL XL"
+*ModelName: "P3305DN China Domestic Compatible"
+*ShortNickName: "P3305DN CN Compatible"
+*NickName: "P3305DN China Domestic Compatible PCL XL"
 *PSVersion: "(3010.000) 0"
 *LanguageLevel: "3"
 *ColorDevice: False
 *DefaultColorSpace: Gray
 *FileSystem: False
-*Throughput: "33"
+*Throughput: "31"
 *LandscapeOrientation: Plus90
 *TTRasterizer: Type42
 *cupsVersion: 2.0

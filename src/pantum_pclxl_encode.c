@@ -91,7 +91,7 @@ int main(int argc, char **argv) {
         fprintf(stderr, "ERROR: Usage: filter job-id user title copies options [file]\n");
         return 1;
     }
-    fprintf(stderr, "DEBUG: PantumCompat 0.2.1 uid=%u euid=%u renderer=%s\n",
+    fprintf(stderr, "DEBUG: PantumCompat 0.2.2 uid=%u euid=%u renderer=%s\n",
             (unsigned)getuid(), (unsigned)geteuid(), GS_PATH);
     if (access(GS_PATH, X_OK)) {
         int why = errno;

@@ -1,21 +1,11 @@
-# 第三方与二进制分发
+# Third-party components and binary redistribution
 
-本次公开的是项目源码，不包含第三方二进制或字体。
-项目源码采用 AGPL-3.0-or-later；许可证全文在 LICENSE 中。
+The public release contains project source, not third-party executables or fonts. Original project files are licensed under **AGPL-3.0-or-later**; the complete text is in [LICENSE](../LICENSE).
 
-Ghostscript 可按 AGPL 或单独商业许可提供，参见
-[官方发行说明](https://ghostscript.com/releases/gsdnld.html) 和
-[官方常见问题](https://ghostscript.com/faq/)。
-完整 AGPL 文本见 [GNU 官方](https://www.gnu.org/licenses/agpl-3.0.html)。
+Ghostscript is available under the AGPL or a separate commercial license. See the [official release page](https://ghostscript.com/releases/gsdnld.html), [official FAQ](https://ghostscript.com/faq/) and [GNU AGPL text](https://www.gnu.org/licenses/agpl-3.0.html).
 
-本机构建工具会复制当前机器中已经安装的 Ghostscript、传递依赖和运行资源，
-并复制能识别的顶层许可文件。其输出标注 LOCAL-USE，不属于源码发行物。
-复制许可文件不代表已经完成所有二进制再分发要求。
+The local build tool copies Ghostscript, transitive non-system dependencies and resources already installed on the builder's machine. It relocates the runtime and copies recognized license notices. Its output is labeled `LOCAL-USE` and is excluded from source releases.
 
-若后续发布安装包，需要先固定各组件版本和来源，复核全部许可、字体及资源的声明，
-提供适用许可证要求的完整对应源码、补丁和构建安装材料，并按许可保留通知。
-单独给出上游首页或附一份许可证不能替代完整对应源码义务。
-构建工具生成的 components.json 只记录组件名称与版本，不是完整的供应链清单。
+Copying those notices does not establish that every binary redistribution requirement has been met. Before publishing a binary installer, fix the exact component versions and sources, review all library, font and resource licenses, preserve required notices, and supply complete corresponding source, patches and build/install materials as required by the applicable licenses. An upstream homepage or a license file alone is not a substitute for corresponding source.
 
-公开仓库不应包含厂商的专有驱动、反汇编产物或从真实文稿提取的字体。
-如未来选择提供可公开下载的二进制发行物，应作为单独发行步骤审核，不能直接上传旧包。
+The generated `components.json` records component names and versions; it is not a complete software bill of materials. Do not include proprietary vendor drivers, disassembly dumps or fonts extracted from real documents in this source project. Treat any future public binary installer as a separate release review.

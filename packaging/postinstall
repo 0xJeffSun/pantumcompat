@@ -3,7 +3,7 @@
 set -eu
 exec >> /Library/Logs/PantumCompat-install.log 2>&1
 /bin/date
-echo 'PantumCompat community 0.2.1: local conversion self-check'
+echo 'PantumCompat community 0.2.2: local conversion self-check'
 base=/Library/Printers/PantumCompat
 /usr/bin/codesign --verify --strict "$base/Filters/pantum_pclxl_encode"
 /usr/bin/codesign --verify --strict "$base/Runtime/bin/gs"

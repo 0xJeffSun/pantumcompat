@@ -22,7 +22,7 @@ if [ -n "$pending" ]; then
   echo 'This queue has unfinished jobs. Finish or cancel them before reconfiguring.' >&2
   exit 1
 fi
-/usr/sbin/lpadmin -p P3305DN_Compat -E -D 'Pantum P3305DN (Compatible)' \
+/usr/sbin/lpadmin -p P3305DN_Compat -E -D 'Pantum P3305DN China (Compatible)' \
   -v "socket://$host:9100/?contimeout=15&waiteof=false" \
   -P /Library/Printers/PantumCompat/Resources/P3305DN-Compat.ppd \
   -o printer-is-shared=false -o printer-error-policy=abort-job \

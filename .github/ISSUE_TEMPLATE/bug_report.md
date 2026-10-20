@@ -1,20 +1,24 @@
 ---
-name: 打印问题
-about: 使用公开样例描述可复现问题；请先脱敏
+name: Printing problem
+about: Reproduce with the public fixture and redact private information first
 title: ''
 labels: bug
 assignees: ''
 ---
 
-请勿填写姓名、账号、单位、打印机地址、电脑路径或真实文稿标题。
-不要直接附整份日志、截图、PRN/PCL 数据、真实文稿或系统配置文件。
+Do not include names, personal email, organization, printer addresses, serial numbers,
+MAC addresses, local home paths or real document titles. Do not attach full logs,
+configuration pages, PRN/PCL captures, screenshots or private documents.
 
-- 打印机型号：
-- macOS 版本及 arm64 架构：
-- 组件版本：
-- Ghostscript 版本：
-- 是否能用公开 selfcheck.ps 复现：
-- 实际现象：
-- 脱敏后的简短错误信息：
+- Printer model:
+- Regional variant (China domestic / overseas / unknown):
+- Non-sensitive specification clues (rated speed, processor, listed print languages if known):
+- macOS version and architecture:
+- Component version:
+- Ghostscript version:
+- Can the public `selfcheck.ps` reproduce the issue?
+- Observed behavior:
+- Short, redacted error message:
 
-请区分本机转换失败、CUPS 任务失败和实体打印结果异常。
+Distinguish conversion failure, CUPS job failure and an incorrect physical print.
+Overseas units and other hardware are unvalidated; opening an issue is not a support guarantee.

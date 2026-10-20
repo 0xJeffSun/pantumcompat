@@ -1,28 +1,28 @@
-# 测试边界
+# Testing and evidence boundaries
 
-## 已有实机依据
+## Hardware evidence
 
-0.2.0 的过滤器和独立运行环境已获得 P3305DN 的 WPS 正常出纸反馈。
-这只覆盖当时的具体设备、系统和文稿，不能推导为所有文档或选项均通过。
-0.2.1 的核心转换步骤保持不变；公开版的安装、地址配置和公开样例均重新整理。
-公开版尚未进行独立的实体打印验收。
+The originating printer was identified by its user as a China domestic P3305DN. With the earlier 0.2.0 component and private conversion runtime, WPS printing succeeded on that unit.
 
-## 无纸检查
+This validates a specific device and documents, not every domestic batch or every P3305DN worldwide. Regional specification differences are documented in [Compatibility](COMPATIBILITY.md); they do not replace a device test.
 
-`tools/test.py` 在临时目录构建测试过滤器，禁止网络访问，
-并禁止读取 Homebrew 默认前缀及用户目录，检查：
+The public packaging revisions have not independently completed physical-print acceptance. Version 0.2.2 changes the documentation, version strings, domestic model labels and the PPD's rated-throughput metadata. It preserves the conversion algorithm. A successful older test must not be relabeled as a new hardware test of 0.2.2.
 
-- 文件输入与标准输入均能生成有合法起止标记的编码 PCL XL，结果一致。
-- 不支持的纸张和损坏输入失败时输出零字节，避免发送部分打印任务。
+## Paper-free conversion checks
 
-这组测试验证隔离环境下的转换，不等同于 macOS CUPS 沙箱验收。
-安装包还会运行 `cups_loopback_check`：创建它独有的临时本机队列，
-通过真正的 CUPS 调用过滤器，等待任务完成并接收编码数据，再删除自己创建的队列。
-它只监听回环地址，不接触实际打印机，不取消其他队列的任务。
-全局 CUPS 配置和现有打印机队列不在安装自检的修改范围内。
+After a local build, `tools/test.py` builds a test filter in a temporary directory, denies network access, and denies reads from the default Homebrew prefix and user directory. It verifies:
 
-## 仍需按实际文档验证
+- File and standard-input interfaces produce identically encoded PCL XL with the expected framing.
+- Unsupported paper sizes and malformed input fail with zero output bytes.
 
-中文字体一致性、复杂表格、图片灰阶、混合横竖版、多页、双面、份数、
-页面范围、合版、A5/Letter/Legal 以及不同应用和系统版本，都需要相应验收。
-离线转换成功和队列显示完成均不能代替实际纸面核对。
+These checks exercise an isolated conversion process, not the actual macOS CUPS sandbox.
+
+The installer separately invokes `cups_loopback_check`. It creates its own temporary local queue, routes a public fixture through the real CUPS filter chain, waits for job completion and receives the encoded bytes on a loopback listener. It then removes only its own named queue. It does not contact the physical printer, cancel other jobs, or alter global CUPS sandbox configuration.
+
+## Implemented options versus physical acceptance
+
+The PPD exposes 600 dpi monochrome output, A4/A5/Letter/Legal and simplex/duplex options. Upstream macOS CUPS handles copies, page selection and n-up layout.
+
+Font fidelity, complex tables, grayscale images, mixed page orientation, multiple pages, duplex, copies, page ranges, n-up, non-A4 paper and other applications or OS versions still need appropriate device-and-document checks. Option availability and successful offline conversion are not evidence that every combination has passed a physical print test.
+
+The current build target is Apple Silicon / arm64. Overseas units, other models and Intel Macs are outside the validated scope. The development environment was macOS 26.4.1 with Ghostscript 10.08.0; future macOS compatibility is not guaranteed.

@@ -1,92 +1,102 @@
-# PantumCompat
+# PantumCompat: macOS printing for the China domestic P3305DN
 
-面向 Apple Silicon Mac 的奔图 P3305DN 社区兼容打印组件。
+English | [简体中文](README.zh-CN.md)
 
-它将 macOS CUPS 提供的 PostScript 转成字形轮廓 PDF，再生成单色 PCL XL，
-对整份输出逐字节执行 XOR `0xA5`，交给 CUPS 的网络后端发送。
-本项目独立维护，不是奔图官方驱动，也不隶属于打印机厂商。
+**PantumCompat is an open-source macOS CUPS compatibility driver for the China domestic Pantum P3305DN, commonly described as the Xinchuang configuration.** It targets the case where the printer is reachable and works through its UOS driver, but jobs sent through the tested stock Mac driver produce no pages. A native Apple Silicon filter converts the job to encoded PCL XL; WPS printing has succeeded on the originating domestic printer.
 
-## 当前状态
+> **Check the regional version first.** The China product page specifies **31 ppm and an 800 MHz processor**. An overseas P3305DN page specifies different hardware and software support. The shared model name does not establish compatibility. See the [regional comparison and official sources](docs/COMPATIBILITY.md).
 
-- 私有前身 0.2.0 已有 P3305DN 从 WPS 经 CUPS 正常出纸的使用者反馈。
-- 本公开版为 0.2.1：保留转换算法，去除预设打印机地址，增加通用构建与配置工具。
-- 当前构建目标为 macOS / arm64；开发验证环境为 macOS 26.4.1、Ghostscript 10.08.0。
-- 尚未承诺 Intel Mac、其他型号、所有应用、字体严格一致或全部打印选项均可用。
-- 支持的配置包括 600 dpi 黑白、A4/A5/Letter/Legal、单面及双面选项。
-  页面范围、份数、合版由上游 CUPS 处理；具体实机覆盖范围见 [测试说明](docs/TESTING.md)。
+## What problem does it solve?
 
-## 源码包与本机安装包
+The motivating case was a China domestic P3305DN that printed successfully with its UOS driver while the tested Mac/PostScript path produced no printed page. An otherwise reachable printer could therefore appear installed on macOS without working from WPS.
 
-这个公开发行物只有源码、PPD、无个人信息的单页测试样例和构建工具。
-它不包含 Ghostscript 二进制、依赖库、字体、历史安装包或任何真实打印文稿。
-构建工具只使用使用者已安装的 Homebrew 依赖，生成供本机安装的包。
-公开分发带 Ghostscript 的二进制包前，还需完成 [第三方分发说明](docs/REDISTRIBUTION.md)。
+PantumCompat supplies the missing macOS conversion and encoding path:
 
-## 本机构建
+```text
+Application → macOS CUPS PostScript → Ghostscript outlined PDF
+            → monochrome PCL XL → whole-stream XOR 0xA5
+            → CUPS socket backend → printer
+```
 
-需要 Apple Silicon Mac、Xcode Command Line Tools、Python 3.9 或更新版本，
-以及通过 Homebrew 安装的 Ghostscript。
-构建过程会复制并重定位 Ghostscript 的依赖，创建独立运行环境；
-安装后的打印过滤器不依赖直接访问 Homebrew 目录。
+It also bundles a private Ghostscript runtime when built locally, so the installed filter does not need to execute Homebrew's `gs` from inside the macOS CUPS sandbox. The earlier sandbox failure and the printer-format mismatch were separate issues.
 
-在项目文件夹中运行：
+This is an independent interoperability project, not an official Pantum driver. It does not repair network connectivity, add a printer firmware feature, or recover fonts already missing from the input document.
+
+## Compatibility at a glance
+
+| Item | Scope |
+| --- | --- |
+| Intended printer | China domestic / Xinchuang-oriented **Pantum P3305DN**; match the [regional specification](docs/COMPATIBILITY.md) |
+| Mac architecture | **Apple Silicon / arm64**; Intel Macs are not validated |
+| Development environment | macOS 26.4.1 and Ghostscript 10.08.0 |
+| Implemented print path | macOS CUPS, Ethernet, RAW TCP port 9100, encoded PCL XL |
+| Rendering | 600 dpi monochrome; A4, A5, Letter and Legal options |
+| Hardware evidence | WPS printing succeeded with the earlier 0.2.0 component on the originating domestic unit |
+| Public release checks | Source builds and isolated conversion tests passed; public packaging revisions have not independently completed physical-print acceptance |
+| Overseas P3305DN / other models | **Unvalidated**; do not select this component solely from the model name |
+
+Duplex, copies, page selection and n-up options exist, but their presence is not a promise that every combination has passed a paper test. See [Testing and evidence boundaries](docs/TESTING.md).
+
+## Build and install
+
+This is a **source-only release**. It contains no ready-to-share Ghostscript bundle, third-party fonts, proprietary vendor driver, or captured print job.
+
+Prerequisites: an Apple Silicon Mac, Xcode Command Line Tools, Python 3.9 or newer, and Ghostscript already installed through Homebrew. The build tool does not download or install dependencies.
+
+From the project directory:
 
 ```sh
 python3 tools/build.py
 ```
 
-工具会输出一个新的 `build/local-*` 目录与 `LOCAL-USE.pkg` 安装包。
-每次构建使用新目录，不覆盖旧输出、不安装软件、不调整打印队列、不发送打印任务。
-当前工具只支持 Homebrew Cellar 布局；若某个依赖或许可证缺失，会停止构建。
-构建工具不会自动下载或安装依赖。
+The tool creates a fresh `build/local-*` directory and a `LOCAL-USE.pkg` installer. It relocates Ghostscript and its non-system dependencies into the printer runtime. It does not install the package, change queues, or submit a print job.
 
-可选的无纸离线检查：
+Optional paper-free conversion checks; replace the example with the directory printed by the build tool:
 
 ```sh
-python3 tools/test.py build/本次构建目录
+python3 tools/test.py build/local-YOUR-BUILD-DIRECTORY
 ```
 
-## 安装与填写打印机地址
+Open the locally built package and follow the macOS administrator prompt. Installation runs a genuine CUPS self-check through a temporary loopback queue, without contacting the physical printer. It leaves global CUPS sandbox configuration and existing queues unchanged. The local package is ad-hoc signed, not Developer ID signed or notarized.
 
-打开本机构建的安装包并按系统提示输入管理员密码。
-包仅作本机临时队列的 CUPS 自检，接收端固定为本机回环地址，不会让实际打印机出纸。
-它不会修改全局 CUPS 沙箱配置，也不会修改已有打印机队列。
-本地安装包仅作临时签名，没有 Developer ID 签名和 Apple 公证。
-
-安装完成后，使用下面的工具创建或更新 `P3305DN_Compat` 队列。
-将示例中的 `printer.example` 换成你自己的打印机 IPv4 地址或 DNS 主机名：
+Then create or update the destination queue, replacing `printer.example` with your printer's own IPv4 address or DNS hostname:
 
 ```sh
 sudo /Library/Printers/PantumCompat/Tools/configure-printer printer.example
 ```
 
-该步骤保存目标地址，不发送测试页，不更改默认打印机；默认设置为 A4、600 dpi、单面。
-工具仅处理这一条指定队列；若队列有未完成任务会停止，避免重配后意外重发。
-当前配置工具接受 IPv4 地址或 DNS 主机名，不接受 IPv6、带端口或路径的 URI。
-确认配置正确后，在应用中选择 **Pantum P3305DN (Compatible)**，先打印一页。
-遇到异常先查看任务状态，避免反复提交同一份文稿。
+The tool configures `P3305DN_Compat`, displayed as **Pantum P3305DN China (Compatible)**. Defaults are A4, 600 dpi and simplex. It does not submit a test page or change the default printer, and stops if that queue has unfinished jobs. IPv6 and full device URIs are not accepted by this configuration tool.
 
-## 工作原理与限制
+Select that queue in WPS or another application and test one page first. A failed job is a reason to inspect the queue, not repeatedly resend the document.
 
-```text
-应用 → macOS CUPS PostScript → Ghostscript 字形轮廓 PDF
-    → Ghostscript pxlmono → 整体 XOR 0xA5 → CUPS socket 后端 → 打印机
-```
+## Frequently asked questions
 
-过滤器完成全部转换并检查输出边界后，才向后端释放打印数据。
-它本身不连接打印机，不下载依赖，也不采集或上传文稿。
-字形轮廓转换不能补回输入阶段已经缺失或被替换的字体。
-RAW 9100 传输没有加密或服务端身份验证，应只在可信网络中使用。
-需要驱动的传统 CUPS 过滤器接口可能随未来 macOS 版本变化。
+### Does this support the overseas Pantum P3305DN?
 
-## 隐私与问题反馈
+Overseas units are outside the validated target. Pantum's regional product pages list materially different configurations under the P3305DN name. Use the [comparison](docs/COMPATIBILITY.md) and the official driver for the correct region where it works; the shared name is insufficient evidence for this workaround.
 
-详见 [隐私说明](docs/PRIVACY.md)。请不要上传整份打印日志、文稿、打印数据、
-屏幕截图或未脱敏的系统信息。可以先用 `resources/selfcheck.ps` 复现，
-只提供型号、系统版本、架构、组件版本和脱敏后的错误信息。
+### Does this guarantee printing from every WPS document, table or PDF?
 
-## 许可
+No. The hardware evidence covers specific documents on the originating domestic printer. Font fidelity, complex tables, mixed orientation, images, duplex and multiple-copy jobs need their own checks. Converting glyphs to outlines cannot undo font substitution that happened upstream.
 
-本项目原始代码、脚本、兼容 PPD 和公开样例采用 **AGPL-3.0-or-later**，见 [LICENSE](LICENSE)。
-第三方组件保留各自许可，见 [NOTICE](NOTICE)。
-Ghostscript 的官方许可说明见 [官方发行页](https://ghostscript.com/releases/gsdnld.html)。
+### Does this add AirPrint or iPhone printing?
+
+No. This project supplies a Mac CUPS filter and network queue configuration. It is not an AirPrint server or printer firmware update.
+
+### Must I disable the macOS CUPS sandbox or install UOS on my Mac?
+
+No. The package builds a native arm64 conversion runtime under the printer component directory and checks the actual CUPS path during installation. UOS driver behavior informed the interoperability work; Linux executables are not shipped or run on macOS.
+
+### How do I tell whether my unit is the intended domestic version?
+
+Check its purchase region, regional documentation and configuration information against the [official-source comparison](docs/COMPATIBILITY.md). The domestic specification is an identification clue, not a compatibility certificate. If the variant is unclear, report it as unknown rather than inferring support from the front-panel model name.
+
+## Privacy and safety
+
+The filter has no telemetry, downloader, or direct printer connection. It finishes conversion and validates the output framing before releasing bytes to the CUPS backend. Temporary files, CUPS spooling and system logs remain subject to the local operating system's behavior.
+
+RAW port 9100 has no transport encryption or server authentication; use it only on a trusted network. Never upload real documents, PRN/PCL/PS captures, full configuration pages, serial numbers, MAC addresses, printer addresses or unredacted logs to an issue. Use the generic `resources/selfcheck.ps` fixture where possible. See [Privacy](docs/PRIVACY.md).
+
+## License
+
+Project source, scripts, compatibility PPD and public fixture are **AGPL-3.0-or-later**; see [LICENSE](LICENSE) and [NOTICE](NOTICE). Third-party components retain their own licenses. Review [Redistribution](docs/REDISTRIBUTION.md) before publishing a locally built binary installer; copying license notices alone does not complete corresponding-source obligations.

@@ -13,8 +13,8 @@ import zipfile
 ROOT = Path(__file__).resolve().parents[1]
 PUBLIC_FILES = (
     '.gitignore', '.github/ISSUE_TEMPLATE/bug_report.md',
-    'VERSION', 'LICENSE', 'NOTICE', 'README.md', 'CHANGELOG.md',
-    'docs/PRIVACY.md', 'docs/TESTING.md', 'docs/REDISTRIBUTION.md',
+    'VERSION', 'LICENSE', 'NOTICE', 'README.md', 'README.zh-CN.md', 'CHANGELOG.md',
+    'docs/PRIVACY.md', 'docs/TESTING.md', 'docs/REDISTRIBUTION.md', 'docs/COMPATIBILITY.md',
     'src/pantum_pclxl_encode.c', 'src/cups_loopback_check.c',
     'resources/P3305DN-Compat.ppd', 'resources/fonts.conf', 'resources/selfcheck.ps',
     'packaging/preinstall', 'packaging/postinstall',

@@ -1,27 +1,19 @@
-# 隐私说明
+# Privacy
 
-公开源码包按明确的文件清单生成，不直接压缩开发工作区。
-清单不包括真实打印文件、原始截图、打印数据、诊断日志、第三方驱动、字体、
-构建产物、安装收据、版本控制历史和系统隐藏元数据。
-项目没有个人作者署名、个人账号、预设局域网打印机地址或遥测功能。
+The public source archive is generated from an explicit file allowlist, not from the complete development workspace. It excludes real documents, screenshots, print streams, diagnostic logs, proprietary vendor drivers, fonts, build outputs, installer receipts, Git history and hidden system metadata.
 
-默认配置由使用者在本机填写；目标地址保存在本机 CUPS 队列配置中。
-打印文稿会经过本机 CUPS、临时转换文件及网络后端，保留行为受系统设置管理。
-过滤器会逐个清理自己创建的临时文件；它不自动清空系统队列或系统日志。
-安装自检仅使用公开样例，将转换结果留在本机诊断位置，不连接实体打印机。
+The project has no personal author attribution, preset office printer address, or telemetry. The destination is entered by the user and stored in that user's local CUPS queue configuration. Public repository ownership and hosting-platform profile information are managed separately by the hosting platform.
 
-本机安装日志位于 `/Library/Logs/PantumCompat-install.log`。
-自检结果位于 `/Library/Logs/PantumCompat-selfcheck.prn`。
-这些文件不在公开发行物内，也不自动上传。
-系统打印日志可能带有用户名、文稿标题、时间和目标信息；提交问题前需逐项脱敏。
-不要公开真实文稿转换后的 PRN/PCL/PS 数据，因为其中可能还原出文稿内容。
+## Local processing
 
-## 安全发布
+Print documents pass through local CUPS spooling, conversion temporary files and the network backend. System retention behavior depends on local OS settings. The filter removes its own temporary files individually; it does not empty system queues or logs.
 
-运行 `python3 tools/release.py`，会先按清单检查源码，再生成固定元数据的 ZIP。
-工具会拒绝源码中出现的典型个人目录、私有网络地址和硬编码个人邮箱等内容；
-通用检测不能识别所有姓名、截图文字或业务秘密，仍需人工阅读准备发布的文件。
+Installation uses only a public fixture and a loopback receiver. It records local diagnostics at `/Library/Logs/PantumCompat-install.log` and `/Library/Logs/PantumCompat-selfcheck.prn`. These files are not part of a public source release and are not uploaded automatically.
 
-若将源码导入托管平台，应使用新的仓库并检查公开账号、头像、提交作者及邮箱。
-压缩包中没有 Git 历史，账号隐私设置由托管平台独立管理。
-不要把整个诊断文件夹、旧安装包或本机构建目录提交进仓库。
+System logs can contain usernames, document titles, times and destinations. Encoded PRN/PCL/PS files may still reveal document content; encoding is not privacy encryption. Never attach real print streams or unredacted configuration pages to a public issue.
+
+## Source release checks
+
+`python3 tools/release.py` checks the allowlisted UTF-8 files, then creates a ZIP with fixed timestamps and no owner, group or extended attributes. It rejects common user-specific home paths, hardcoded personal email addresses and private/link-local IPv4 addresses except loopback.
+
+Pattern checks cannot identify every name, secret or business detail; manually review the exact files before publishing. A fresh repository and privacy-preserving commit identity avoid carrying local history into publication. Check the hosting account's public profile and email preferences separately.
