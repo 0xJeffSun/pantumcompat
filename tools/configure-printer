@@ -1,0 +1,30 @@
+#!/bin/sh
+# SPDX-License-Identifier: AGPL-3.0-or-later
+set -eu
+if [ "$(/usr/bin/id -u)" -ne 0 ]; then
+  echo 'Run with sudo to configure a local CUPS queue.' >&2
+  exit 1
+fi
+if [ "$#" -ne 1 ]; then
+  echo 'Usage: sudo configure-printer PRINTER_IPV4_OR_HOSTNAME' >&2
+  exit 1
+fi
+host=$1
+case "$host" in
+  ''|-*|.*|*[!a-zA-Z0-9.-]*) echo 'Use an IPv4 address or DNS hostname, without a scheme, port or path.' >&2; exit 1 ;;
+esac
+if [ "${#host}" -gt 253 ]; then
+  echo 'Printer address is too long.' >&2
+  exit 1
+fi
+pending="$(/usr/bin/lpstat -W not-completed -o P3305DN_Compat 2>/dev/null || true)"
+if [ -n "$pending" ]; then
+  echo 'This queue has unfinished jobs. Finish or cancel them before reconfiguring.' >&2
+  exit 1
+fi
+/usr/sbin/lpadmin -p P3305DN_Compat -E -D 'Pantum P3305DN (Compatible)' \
+  -v "socket://$host:9100/?contimeout=15&waiteof=false" \
+  -P /Library/Printers/PantumCompat/Resources/P3305DN-Compat.ppd \
+  -o printer-is-shared=false -o printer-error-policy=abort-job \
+  -o PageSize=A4 -o Resolution=600dpi -o Duplex=None
+echo 'Queue configured. No test page has been submitted.'

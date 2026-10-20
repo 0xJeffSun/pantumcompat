@@ -1,0 +1,20 @@
+PantumCompat is an independent interoperability project.
+It is not an official Pantum driver and is not endorsed by the manufacturer.
+Product names and trademarks belong to their respective owners.
+
+Original project source, scripts, PPD and public fixture:
+SPDX-License-Identifier: AGPL-3.0-or-later
+See LICENSE for the full license text. No personal author identity is included.
+
+This source release contains no Ghostscript binaries, libraries, font files,
+proprietary vendor executables, vendor source code, or reverse-engineering dumps.
+The PPD in resources/ is the compatibility project's configuration.
+
+Local builds depend on Ghostscript and its dependencies, which retain their
+own licenses. Ghostscript is licensed under AGPL-3.0-or-later (or a separate
+commercial license). See https://ghostscript.com/releases/gsdnld.html and
+https://www.gnu.org/licenses/agpl-3.0.html .
+
+Publishing a binary package requires a separate review of ALL bundled
+components, notices, and complete corresponding source and build information.
+The local build tool is not a substitute for fulfilling those requirements.

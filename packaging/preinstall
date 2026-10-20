@@ -1,0 +1,8 @@
+#!/bin/sh
+# SPDX-License-Identifier: AGPL-3.0-or-later
+set -eu
+pending="$(/usr/bin/lpstat -W not-completed -o 2>/dev/null || true)"
+if [ -n "$pending" ]; then
+  echo 'Printing has unfinished jobs. Finish or cancel them before installing.' >&2
+  exit 1
+fi

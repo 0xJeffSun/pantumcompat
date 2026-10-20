@@ -1,0 +1,39 @@
+{
+  "version": "0.2.1",
+  "kind": "source-only",
+  "files": {
+    ".gitignore": "c6fb9427984202503098aa85c4da07e8cb66124960e2d5e4815fb04e58e5cecb",
+    ".github/ISSUE_TEMPLATE/bug_report.md": "63e101af6c6ef3506e6d191dbe4ab0011371def1dc1872c5550ae3b8c43b1c68",
+    "VERSION": "71015c979ccb0fc8a0be7ca0ae83046ab045cdc2c8faa09fb2f0f7e440f9b4a6",
+    "LICENSE": "0d96a4ff68ad6d4b6f1f30f713b18d5184912ba8dd389f86aa7710db079abcb0",
+    "NOTICE": "ab87101010659a4259ea6d04f10abe021d6d561153a9706546cd81c69e0f7ef2",
+    "README.md": "14a6cdfab1a78ecc81bb60db082dca8b2c2b7eb11bb21eaa18fbb9e35e226e2d",
+    "CHANGELOG.md": "0f5aeef7beba976e222b812b6f056df44cbc09d42f622ed94dda78d4d4463127",
+    "docs/PRIVACY.md": "ef57b09b663a2d702114173b6569f561b82bfd96629037f6f69f51156ec10d92",
+    "docs/TESTING.md": "a6d62cf47532e1e66cf5ea79d8d852b407b934c704b9b3664c2cf6db32bdd68b",
+    "docs/REDISTRIBUTION.md": "25ca2713bd7cf014c71bbedd7b1b74f532924f05adea152b35694759149b53d6",
+    "src/pantum_pclxl_encode.c": "defcf144cd5fa57005fab4a3ea032ddd1afb23c335be9e7f221f6c35635c98fd",
+    "src/cups_loopback_check.c": "844f43fb90423d14a3b3a68efa2496774ab23afa73c198648d00a23e1b513092",
+    "resources/P3305DN-Compat.ppd": "870de7bab2692ee6ec4c502f1cfaa6aaf4907ae2d0ab34b44d9fb24b3f7fc55e",
+    "resources/fonts.conf": "7c193f1a951bafe59aeb0c586c714964cbfe965d73d24aade1fbcd5731197869",
+    "resources/selfcheck.ps": "e483c86fef3e9ef54d47220b4094c8df8f87371c2ef86fda11a96df00715c39d",
+    "packaging/preinstall": "c9df0ba071783f1074e28d4aea3e7e75f038b6a4e5a5ebacbbef375201722f05",
+    "packaging/postinstall": "1e621ece8f03b3f789a4c49b54f28e1943b4d91ba72ab9f36f8bb8564f41c03e",
+    "tools/configure-printer": "d3f97f2b1934a27568c2904a2b483bf0aa95a696737572879de03d631ce43ceb",
+    "tools/build.py": "321c15bd3a9a24c0df8776ee17022e844fab73322db3b27879c4f020277969a4",
+    "tools/test.py": "7d46b22708faa2dc5922990bb41bfdedb119f1fbefaa6eb2b1a1759731cfdcfd",
+    "tools/release.py": "e3b8ff8f6e78aa3dcbe539bf9da2f340b80e44abb061340d8c7a403d34550b32"
+  },
+  "archive_metadata": "fixed timestamp; no owner, group, paths or xattrs",
+  "excluded": [
+    "binaries",
+    "fonts",
+    "personal documents",
+    "logs",
+    "print data",
+    "historical installers",
+    "git history",
+    "build outputs"
+  ],
+  "privacy_checks": "allowlist plus UTF-8, home-directory, email and private-IP checks"
+}

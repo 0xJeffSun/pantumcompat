@@ -1,0 +1,18 @@
+#!/bin/sh
+# SPDX-License-Identifier: AGPL-3.0-or-later
+set -eu
+exec >> /Library/Logs/PantumCompat-install.log 2>&1
+/bin/date
+echo 'PantumCompat community 0.2.1: local conversion self-check'
+base=/Library/Printers/PantumCompat
+/usr/bin/codesign --verify --strict "$base/Filters/pantum_pclxl_encode"
+/usr/bin/codesign --verify --strict "$base/Runtime/bin/gs"
+/usr/bin/cupstestppd -q "$base/Resources/P3305DN-Compat.ppd"
+/bin/mkdir -p /Library/Caches/PantumCompat/fontconfig
+/usr/sbin/chown _lp:_lp /Library/Caches/PantumCompat /Library/Caches/PantumCompat/fontconfig
+/bin/chmod 0755 /Library/Caches/PantumCompat /Library/Caches/PantumCompat/fontconfig
+"$base/Tools/cups_loopback_check" "$base/Resources/P3305DN-Compat.ppd" \
+  "$base/Resources/selfcheck.ps" /Library/Logs/PantumCompat-selfcheck.prn
+echo 'PASS: local CUPS self-check. No physical printer job submitted.'
+echo 'Existing queues and global CUPS sandbox configuration were not changed.'
+echo 'To add a destination, run the installed Tools/configure-printer with your printer address.'

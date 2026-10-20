@@ -1,0 +1,13 @@
+.DS_Store
+._*
+__pycache__/
+*.pyc
+build/
+dist/
+*.pkg
+*.prn
+*.log
+*.zip
+*.dmg
+*.p12
+*.pem
